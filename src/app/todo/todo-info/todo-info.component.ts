@@ -1,20 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { TodoService } from '../todo.service';
+import { select, Store } from '@ngrx/store';
+
+import * as fromTodoReducer from '../todo.reducers';
 
 @Component({
   selector: 'app-todo-info',
   templateUrl: './todo-info.component.html'
 })
 export class TodoInfoComponent implements OnInit {
-  todos$: any;
+  todoState$: any;
 
-  constructor(private todoService: TodoService) {}
+  constructor(private store: Store<fromTodoReducer.State>) {}
 
   ngOnInit(): void {
-    this.todos$ = this.todoService.todosChanged;
+    this.todoState$ = this.store.pipe(select('todo'));
   }
 
   deleteAllTodos(): void {
-    this.todoService.deleteAll();
+    this.store.dispatch({ type: 'DELETE ALL TODOS' });
   }
 }

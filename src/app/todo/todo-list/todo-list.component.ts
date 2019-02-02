@@ -1,27 +1,30 @@
 import { Component, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
 import { Todo } from '../todo.model';
-import { TodoService } from '../todo.service';
+import * as fromTodoReducer from '../todo.reducers';
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html'
 })
 export class TodoListComponent implements OnInit {
-  todos$: any;
+  todoState$: Observable<fromTodoReducer.State>;
   isEdit = false;
   newTodo: string;
   index: number;
   selectedTodo: Todo;
 
-  constructor(private todoService: TodoService) {}
+  constructor(private store: Store<fromTodoReducer.State>) {}
 
   ngOnInit(): void {
-    this.todos$ = this.todoService.todosChanged;
+    this.todoState$ = this.store.pipe(select('todo'));
   }
 
-  addTodo(newTodo: string): void {
-    const todo: Todo = new Todo(newTodo);
-    this.todoService.add(todo);
+  addTodo(): void {
+    const todo: Todo = new Todo(this.newTodo);
+    this.store.dispatch({ type: 'ADD TODO', payload: todo });
   }
 
   updateTodo(index: number, todo: Todo): void {
@@ -33,12 +36,12 @@ export class TodoListComponent implements OnInit {
 
   confirmTodo(newTodoInput: string): void {
     this.selectedTodo.name = newTodoInput;
-    this.todoService.update(this.index, this.selectedTodo);
+    this.store.dispatch({ type: 'UPDATE TODO', payload: { id: this.index, updatedTodo: this.selectedTodo } });
     this.isEdit = false;
     this.newTodo = '';
   }
 
   deleteTodo(index: number): void {
-    this.todoService.delete(index);
+    this.store.dispatch({ type: 'DELETE TODO', payload: index });
   }
 }
