@@ -1,4 +1,5 @@
 import { Todo } from './todo.model';
+import { TodoActions, TodoActionsTypes } from './todo.actions';
 
 export interface State {
   todos: Array<Todo>;
@@ -10,23 +11,15 @@ const initialState: State = {
   lastUpdate: new Date().toString()
 };
 
-export function todoReducer(state = initialState, action) {
+export function todoReducer(state: State = initialState, action: TodoActions) {
   switch (action.type) {
-    case 'ADD TODO':
+    case TodoActionsTypes.ADD_TODO:
       return {
         ...state,
         lastUpdate: new Date().toString(),
         todos: [...state.todos, action.payload]
       };
-    case 'DELETE TODO':
-      const oldTodos: Todo[] = [...state.todos];
-      oldTodos.splice(action.payload, 1);
-      return {
-        ...state,
-        lastUpdate: new Date().toString(),
-        todos: oldTodos
-      };
-    case 'UPDATE TODO':
+    case TodoActionsTypes.UPDATE_TODO:
       const todo: Todo = state.todos[action.payload.id];
       const updatedTodo: any = {
         todo,
@@ -39,7 +32,15 @@ export function todoReducer(state = initialState, action) {
         lastUpdate: new Date().toString(),
         todos: todos
       };
-    case 'DELETE ALL TODOS':
+    case TodoActionsTypes.DELETE_TODO:
+      const oldTodos: Todo[] = [...state.todos];
+      oldTodos.splice(action.payload, 1);
+      return {
+        ...state,
+        lastUpdate: new Date().toString(),
+        todos: oldTodos
+      };
+    case TodoActionsTypes.DELETE_ALL_TODOS:
       return {
         ...state,
         lastUpdate: new Date().toString(),

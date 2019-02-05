@@ -3,7 +3,8 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { Todo } from '../todo.model';
-import * as fromTodoReducer from '../todo.reducers';
+import * as fromTodoReducer from '../todo.reducer';
+import * as todoActions from '../todo.actions';
 
 @Component({
   selector: 'app-todo-list',
@@ -24,7 +25,7 @@ export class TodoListComponent implements OnInit {
 
   addTodo(): void {
     const todo: Todo = new Todo(this.newTodo);
-    this.store.dispatch({ type: 'ADD TODO', payload: todo });
+    this.store.dispatch(new todoActions.AddTodo(todo));
   }
 
   updateTodo(index: number, todo: Todo): void {
@@ -36,12 +37,12 @@ export class TodoListComponent implements OnInit {
 
   confirmTodo(newTodoInput: string): void {
     this.selectedTodo.name = newTodoInput;
-    this.store.dispatch({ type: 'UPDATE TODO', payload: { id: this.index, updatedTodo: this.selectedTodo } });
+    this.store.dispatch(new todoActions.UpdateTodo({ id: this.index, updatedTodo: this.selectedTodo }));
     this.isEdit = false;
     this.newTodo = '';
   }
 
   deleteTodo(index: number): void {
-    this.store.dispatch({ type: 'DELETE TODO', payload: index });
+    this.store.dispatch(new todoActions.DeleteTodo(index));
   }
 }

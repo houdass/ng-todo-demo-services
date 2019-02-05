@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
-import * as fromTodoReducer from '../todo.reducers';
+import * as fromTodoReducer from '../todo.reducer';
+import * as todoActions from '../todo.actions';
 
 @Component({
   selector: 'app-todo-info',
@@ -17,6 +18,6 @@ export class TodoInfoComponent implements OnInit {
   }
 
   deleteAllTodos(): void {
-    this.store.dispatch({ type: 'DELETE ALL TODOS' });
+    this.store.dispatch(new todoActions.DeleteAllTodos());
   }
 }
