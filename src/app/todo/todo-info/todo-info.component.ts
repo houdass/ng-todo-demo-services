@@ -1,23 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 import * as fromTodoReducer from '../todo.reducer';
-import * as todoActions from '../todo.actions';
+import * as fromTodoActions from '../todo.actions';
+import * as fromTodoSelectors from '../todo.selectors';
 
 @Component({
   selector: 'app-todo-info',
   templateUrl: './todo-info.component.html'
 })
 export class TodoInfoComponent implements OnInit {
-  todoState$: any;
+  lastUpdate$: Observable<string>;
+  count$: Observable<number>;
 
   constructor(private store: Store<fromTodoReducer.State>) {}
 
   ngOnInit(): void {
-    this.todoState$ = this.store.pipe(select('todo'));
+    this.lastUpdate$ = this.store.pipe(select(fromTodoSelectors.selectLastUpdate));
+    this.count$ = this.store.pipe(select(fromTodoSelectors.selectTotal));
   }
 
   deleteAllTodos(): void {
-    this.store.dispatch(new todoActions.DeleteAllTodos());
+    this.store.dispatch(new fromTodoActions.DeleteAllTodos());
   }
 }
