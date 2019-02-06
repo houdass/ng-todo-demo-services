@@ -9,12 +9,14 @@ import { TodoListComponent } from './todo/todo-list/todo-list.component';
 import { TodoInfoComponent } from './todo/todo-info/todo-info.component';
 import { todoReducer } from './todo/todo.reducer';
 import { environment } from '../environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent, TodoListComponent, TodoInfoComponent],
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     StoreModule.forRoot({ todo: todoReducer }),
     !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 10 }) : []
   ],

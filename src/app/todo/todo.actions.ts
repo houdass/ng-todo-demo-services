@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { Update } from '@ngrx/entity/src/models';
 
 import { Todo } from './todo.model';
 
@@ -18,7 +19,7 @@ export class AddTodo implements Action {
 export class UpdateTodo implements Action {
   readonly type = TodoActionsTypes.UPDATE_TODO;
 
-  constructor(public payload: { id: number; updatedTodo: Todo }) {}
+  constructor(public payload: { todo: Update<Todo> }) {}
 }
 
 export class DeleteTodo implements Action {

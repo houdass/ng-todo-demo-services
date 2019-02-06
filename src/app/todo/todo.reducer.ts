@@ -1,51 +1,47 @@
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+
 import { Todo } from './todo.model';
 import { TodoActions, TodoActionsTypes } from './todo.actions';
 
-export interface State {
-  todos: Array<Todo>;
+export interface State extends EntityState<Todo> {
   lastUpdate: string;
 }
 
-const initialState: State = {
-  todos: [new Todo('Learn Java'), new Todo('Learn Angular')],
-  lastUpdate: new Date().toString()
+export const todoAdapter: EntityAdapter<Todo> = createEntityAdapter<Todo>();
+
+const defaultTodos: any = {
+  ids: [0, 1],
+  entities: {
+    0: new Todo(0, 'Learn Angular'),
+    1: new Todo(1, 'Learn Java')
+  },
+  updateDate: new Date().toString()
 };
+
+const initialState: State = todoAdapter.getInitialState(defaultTodos);
 
 export function todoReducer(state: State = initialState, action: TodoActions) {
   switch (action.type) {
     case TodoActionsTypes.ADD_TODO:
-      return {
+      return todoAdapter.addOne(action.payload, {
         ...state,
-        lastUpdate: new Date().toString(),
-        todos: [...state.todos, action.payload]
-      };
+        updateDate: new Date().toString()
+      });
     case TodoActionsTypes.UPDATE_TODO:
-      const todo: Todo = state.todos[action.payload.id];
-      const updatedTodo: any = {
-        todo,
-        ...action.payload.updatedTodo
-      };
-      const todos: Array<Todo> = [...state.todos];
-      todos[action.payload.id] = updatedTodo;
-      return {
+      return todoAdapter.updateOne(action.payload.todo, {
         ...state,
-        lastUpdate: new Date().toString(),
-        todos: todos
-      };
+        updateDate: new Date().toString()
+      });
     case TodoActionsTypes.DELETE_TODO:
-      const oldTodos: Todo[] = [...state.todos];
-      oldTodos.splice(action.payload, 1);
-      return {
+      return todoAdapter.removeOne(action.payload, {
         ...state,
-        lastUpdate: new Date().toString(),
-        todos: oldTodos
-      };
+        updateDate: new Date().toString()
+      });
     case TodoActionsTypes.DELETE_ALL_TODOS:
-      return {
+      return todoAdapter.removeAll({
         ...state,
-        lastUpdate: new Date().toString(),
-        todos: []
-      };
+        updateDate: new Date().toString()
+      });
     default:
       return state;
   }

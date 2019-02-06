@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import * as fromTodoReducer from '../todo.reducer';
 import * as fromTodoActions from '../todo.actions';
 import * as fromTodoSelectors from '../todo.selectors';
+import { tap } from 'rxjs/internal/operators';
 
 @Component({
   selector: 'app-todo-info',

@@ -17,28 +17,31 @@ export class TodoListComponent implements OnInit {
   newTodo: string;
   index: number;
   selectedTodo: Todo;
+  increment: number;
 
-  constructor(private store: Store<fromTodoReducer.State>) {}
+  constructor(private store: Store<fromTodoReducer.State>) {
+    this.increment = 2;
+  }
 
   ngOnInit(): void {
     this.todos$ = this.store.pipe(select(fromTodoSelectors.selectAll));
   }
 
   addTodo(): void {
-    const todo: Todo = new Todo(this.newTodo);
+    const todo: Todo = new Todo(++this.increment, this.newTodo);
     this.store.dispatch(new fromTodoActions.AddTodo(todo));
   }
 
   updateTodo(index: number, todo: Todo): void {
     this.isEdit = true;
-    this.newTodo = todo.name;
+    this.newTodo = todo.label;
     this.selectedTodo = todo;
     this.index = index;
   }
 
   confirmTodo(newTodoInput: string): void {
-    this.selectedTodo.name = newTodoInput;
-    this.store.dispatch(new fromTodoActions.UpdateTodo({ id: this.index, updatedTodo: this.selectedTodo }));
+    this.selectedTodo.label = newTodoInput;
+    this.store.dispatch(new fromTodoActions.UpdateTodo({ todo: { id: this.index, changes: this.selectedTodo } }));
     this.isEdit = false;
     this.newTodo = '';
   }
