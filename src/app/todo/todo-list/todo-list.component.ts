@@ -34,13 +34,13 @@ export class TodoListComponent implements OnInit {
 
   updateTodo(index: number, todo: Todo): void {
     this.isEdit = true;
-    this.newTodo = todo.label;
+    this.newTodo = todo.title;
     this.selectedTodo = todo;
     this.index = index;
   }
 
   confirmTodo(newTodoInput: string): void {
-    this.selectedTodo.label = newTodoInput;
+    this.selectedTodo.title = newTodoInput;
     this.store.dispatch(new fromTodoActions.UpdateTodo({ todo: { id: this.index, changes: this.selectedTodo } }));
     this.isEdit = false;
     this.newTodo = '';

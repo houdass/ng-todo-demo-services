@@ -13,7 +13,7 @@
 <br/>
 <ng-container *ngIf="todos$ | async as todos">
   <div *ngFor="let todo of todos; index as i">
-    {{ todo.label }}
+    {{ todo.title }}
     <div class="btn-group pull-right">
       <button class="btn btn-info btn-xs" (click)="updateTodo(i, todo)">
         <span class="glyphicon glyphicon-edit"></span>
